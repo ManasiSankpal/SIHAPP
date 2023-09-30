@@ -1,0 +1,83 @@
+{
+  "project_info": {
+    "project_number": "990607831936",
+    "firebase_url": "https://android-chat-bot-dc777-default-rtdb.firebaseio.com",
+    "project_id": "android-chat-bot-dc777",
+    "storage_bucket": "android-chat-bot-dc777.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:990607831936:android:ad04551177ab4f7d568765",
+        "android_client_info": {
+          "package_name": "com.example.myhr"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "990607831936-tpdvjeijqhlq6jcqqavhnc981sd8397g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBujQ6gS_ruBAFdkU7Tch3KNOmiDgIZze4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "990607831936-tpdvjeijqhlq6jcqqavhnc981sd8397g.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "990607831936-a5ngiv5313gkvgc9ia9qsiqrq12bfu6p.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.myhr"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:990607831936:android:d0c1332007e737f8568765",
+        "android_client_info": {
+          "package_name": "com.example.sihapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "990607831936-tpdvjeijqhlq6jcqqavhnc981sd8397g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBujQ6gS_ruBAFdkU7Tch3KNOmiDgIZze4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "990607831936-tpdvjeijqhlq6jcqqavhnc981sd8397g.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "990607831936-a5ngiv5313gkvgc9ia9qsiqrq12bfu6p.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.myhr"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
