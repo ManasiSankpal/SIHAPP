@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sihapp/Getstart.dart';
 import 'package:sihapp/HomeScreen.dart';
 import 'package:sihapp/Login.dart';
 
@@ -9,7 +10,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized(); // Ensure that Flutter is initialized.
   await Firebase.initializeApp(); // Initialize Firebase.
 
-  // Check user login state
   SharedPreferences prefs = await SharedPreferences.getInstance();
   bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
 
@@ -25,5 +25,3 @@ void main() async {
     },
   ));
 }
-
-
