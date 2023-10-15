@@ -1,72 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:sihapp/AnnouncementPage.dart';
-import 'package:sihapp/ChatBoat2.dart';
-import 'package:sihapp/FeedBack.dart';
-import 'package:sihapp/LostFound.dart';
-import 'package:sihapp/ProfilePage.dart';
-import 'package:share/share.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:cached_network_image/cached_network_image.dart'; // Import cached_network_image package
+import 'package:sihapp/IconSlider.dart';
+import 'package:page_transition/page_transition.dart';
+import 'package:sihapp/lineWithCircles.dart';
+import 'package:sihapp/TrainSummary Section.dart';
+import 'package:sihapp/myBottomNavigation.dart';
+
+int _selectedIndex = 0;
 
 class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
-final FirebaseAuth _auth = FirebaseAuth.instance;
 
-Future<void> _signOut(BuildContext context) async {
-  try {
-    await _auth.signOut();
-
-    // Clear user's login state
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setBool('isLoggedIn', false); // Set isLoggedIn to false
-
-    // Navigate to the LoginScreen
-    Navigator.of(context).pushReplacementNamed('/login');
-  } catch (e) {
-    print('Error during sign out: $e');
-  }
-}
-
-Future<void> _showSignOutConfirmationDialog(BuildContext context) async {
-  return showDialog<void>(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text('Sign Out Confirmation'),
-        content: Text('Are you sure you want to sign out?'),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop(); // Close the dialog
-            },
-            child: Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop(); // Close the dialog
-              _signOut(context); // Sign out when confirmed
-            },
-            child: Text('Sign Out'),
-          ),
-        ],
-      );
-    },
+PageTransition customPageTransition(Widget page) {
+  return PageTransition(
+    type: PageTransitionType.rightToLeft,
+    child: page,
   );
 }
 
 class _HomeScreenState extends State<HomeScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  bool isSearchBarActive = true;
-
-  void toggleSearchBar() {
-    setState(() {
-      isSearchBarActive = !isSearchBarActive;
-    });
-  }
 
   void _signOut() async {
     try {
@@ -77,228 +33,173 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  int _currentIndex = 0;
-
   @override
   Widget build(BuildContext context) {
+    int _selectedIndex = 0;
+
+    void _onItemTapped(int index) {
+      setState(() {
+        _selectedIndex = index;
+      });
+    }
+
     return Scaffold(
-      backgroundColor: Colors.grey[900], // Set the background color to light black
-      appBar: AppBar(
-        title: Text('EVA'),
-        actions: [
-          IconButton(
-            icon: Icon(isSearchBarActive ? Icons.close : Icons.search),
-            onPressed: toggleSearchBar,
-          ),
-          IconButton(
-            icon: Icon(Icons.mic),
-            onPressed: () {
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute(
-                  builder: (context) => ChatScreen2(),
-                ),
-              );
-            },
-          ),
-        ],
-      ),
-      drawer: Drawer(
-        // Add your drawer content here
-        child: ListView(
-          children: [
-            UserAccountsDrawerHeader(
-              accountName: Text('John Doe'),
-              accountEmail: Text('john.doe@example.com'),
-              currentAccountPicture: CircleAvatar(
-                backgroundImage: AssetImage('assets/profile.jpg'),
-              ),
-            ),
-            ListTile(
-              leading: Icon(Icons.home),
-              title: Text('Home'),
-              onTap: () {
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                    builder: (context) => HomeScreen(),
-                  ),
-                );
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.feedback),
-              title: Text('FeedBack'),
-              onTap: () {
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                    builder: (context) => FeedbackForm(),
-                  ),
-                );
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.account_circle),
-              title: Text('Profile'),
-              onTap: () {
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                    builder: (context) => ProfilePage(),
-                  ),
-                );
-              },
-            ),
-            Divider(),
-            ListTile(
-              leading: Icon(Icons.logout),
-              title: Text('Logout'),
-              onTap: () {
-                _showSignOutConfirmationDialog(context); // Show confirmation dialog
-                child: Text('Sign Out');
-              },
-            ),
-          ],
-        ),
-      ),
+      backgroundColor: Colors.white, // Set the background color to light black
+
       body: Stack(
         children: [
           // Background Image (if needed)
-
           // Content
-          Scrollbar(
-            child: ListView(
-              children: [
-                // First section:
-                ContainerWithIcons(),
-                // Second section:
-                AccountSummarySection(),
-                // Third section:
-                TrainSummarySection(),
-
-
-
-                // Upcoming trip
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Card(
-                    color: Colors.lightBlue[100], // Set the background color to light blue
-                    elevation: 5, // Add elevation for a card-like effect
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15.0), // Set circular radius
+          ListView(
+            padding: EdgeInsets.all(0), // Remove top padding
+            children: [
+              SizedBox(
+                height: 350.0,
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Color(0xFFB2819E), // Start color
+                        Color(0xFFD78182), // Middle color
+                        Color(0xFFCE637F), // End color
+                        Color(0xFFFFFFFF), // End color
+                        Color(0xFFFFFFFF), // End color
+                      ],
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0), // Add inner padding for space within the Card
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                  ),
+                  child: Stack(
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text(
-                            'Upcoming Trip',
-                            style: TextStyle(
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.bold,
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                top: 40, left: 25, right: 25),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Welcome, Users", // Your first text here
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20,
+                                        // fontWeight: FontWeight.w500, // Medium text weight
+                                      ),
+                                    ),
+                                    Text(
+                                      "Your Questions Our Answers!", // Your second text here
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize:
+                                            20, // Adjust the font size as needed
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Icon(
+                                  Icons
+                                      .account_circle, // Replace with your user icon
+                                  color: Color(0xFFDADDEE),
+                                  size: 40,
+                                ),
+                              ],
                             ),
                           ),
-                          SizedBox(height: 8.0),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('HK789KOG'),
-                              Text('Malabar (119) Economy (CA)'),
-                            ],
-                          ),
-                          SizedBox(height: 8.0),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('Yogyakarta (YK)'),
-                              Text('Bandung (BD)'),
-                            ],
-                          ),
-                          SizedBox(height: 8.0),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('19:30 WIB'),
-                              Text('06:30 WIS'),
-                            ],
-                          ),
-                          SizedBox(height: 8.0),
+                          SizedBox(height: 60.0),
+                          HeaderOveright(),
                         ],
                       ),
+                    ],
+                  ),
+                ),
+              ),
+
+              SliderIconSection(),
+
+              IconSlider(),
+
+              ImageSection(),
+
+              // First section:
+              AccountSummarySection(),
+
+              // Second section:
+              ContainerWithIcons(),
+
+              // Third section:
+              TrainSummarySection(),
+
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Card(
+                  color: Colors
+                      .lightBlue[100], // Set the background color to light blue
+                  elevation: 5, // Add elevation for a card-like effect
+                  shape: RoundedRectangleBorder(
+                    borderRadius:
+                        BorderRadius.circular(15.0), // Set circular radius
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(
+                        16.0), // Add inner padding for space within the Card
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Upcoming Trip',
+                          style: TextStyle(
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 8.0),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('HK789KOG'),
+                            Text('Malabar (119) Economy (CA)'),
+                          ],
+                        ),
+                        SizedBox(height: 8.0),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('Yogyakarta (YK)'),
+                            Text('Bandung (BD)'),
+                          ],
+                        ),
+                        SizedBox(height: 8.0),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('19:30 WIB'),
+                            Text('06:30 WIS'),
+                          ],
+                        ),
+                        SizedBox(height: 8.0),
+                      ],
                     ),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-          if (index == 1) {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(
-                builder: (context) => AnnouncementPage(),
-              ),
-            );
-          }
-          if (index == 2) {
-            final shareableLink = 'https://flutter.dev/';
-            Share.share(
-              shareableLink,
-              subject: 'Share this link',
-            );
-          } else if (index == 3) {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(
-                builder: (context) => ProfilePage(),
-              ),
-            );
-          }
-          else if (index == 4) {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(
-                builder: (context) => LostAndFoundPage(),
-              ),
-            );
-          }
-        },
-
-
-        unselectedItemColor: Colors.black,
-        selectedItemColor: Colors.blue,
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-
-          BottomNavigationBarItem(
-            icon: Icon(Icons.notifications),
-            label: 'announcements',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.share),
-            label: 'Share',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.account_box),
-            label: 'Profile',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.help),
-            label: 'help',
-          ),
-        ],
+      bottomNavigationBar: MyBottomNavigationBar(
+        // Use the imported class
+        selectedIndex: _selectedIndex,
+        onItemTapped: _onItemTapped,
       ),
     );
   }
 }
-
-
-
 
 class AccountSummarySection extends StatelessWidget {
   final List<String> imagePaths = [
@@ -311,7 +212,7 @@ class AccountSummarySection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.only(top: 0.0),
       child: Column(
         children: [
           Container(
@@ -350,8 +251,10 @@ class AccountSummarySection extends StatelessWidget {
                               width: 200.0,
                               height: 200.0,
                               fit: BoxFit.cover,
-                              cacheWidth: 2000, // Adjust the cacheWidth based on your needs
-                              cacheHeight: 2000, // Adjust the cacheHeight based on your needs
+                              cacheWidth:
+                                  2000, // Adjust the cacheWidth based on your needs
+                              cacheHeight:
+                                  2000, // Adjust the cacheHeight based on your needs
                             ),
                           );
                         },
@@ -372,7 +275,6 @@ class AccountSummarySection extends StatelessWidget {
                           color: Colors.blue, // Adjust indicator color
                         ),
                         // Highlight the current image's indicator
-
                       );
                     }).toList(),
                   ),
@@ -386,89 +288,6 @@ class AccountSummarySection extends StatelessWidget {
   }
 }
 
-
-
-
-
-
-
-class TrainSummarySection extends StatelessWidget {
-  String from = '';
-  String to = '';
-  String departure = '';
-  String date = '';
-  String trainType = '';
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Card(
-        elevation: 5,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15.0),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                'search for train',
-                style: TextStyle(
-                  fontSize: 25.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              TextField(
-                decoration: InputDecoration(labelText: 'From'),
-                onChanged: (value) {
-                  from = value;
-                },
-              ),
-              TextField(
-                decoration: InputDecoration(labelText: 'To'),
-                onChanged: (value) {
-                  to = value;
-                },
-              ),
-              TextField(
-                decoration: InputDecoration(labelText: 'Departure'),
-                onChanged: (value) {
-                  departure = value;
-                },
-              ),
-              TextField(
-                decoration: InputDecoration(labelText: 'Date'),
-                onChanged: (value) {
-                  date = value;
-                },
-              ),
-              TextField(
-                decoration: InputDecoration(labelText: 'Train Type'),
-                onChanged: (value) {
-                  trainType = value;
-                },
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  print('Searching for trains:');
-                  print('From: $from');
-                  print('To: $to');
-                  print('Departure: $departure');
-                  print('Date: $date');
-                  print('Train Type: $trainType');
-                },
-                child: Text('Search Train'),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
 class ContainerWithIcons extends StatelessWidget {
   final List<List<String>> imagePathsList = [
     [
@@ -497,26 +316,33 @@ class ContainerWithIcons extends StatelessWidget {
       padding: EdgeInsets.only(top: 30.0), // Add top padding
       child: Container(
         height: 310.0, // Adjust the height for multiple rows
-        padding: EdgeInsets.symmetric(horizontal: 10.0), // Add padding to the left and right ends
+        padding: EdgeInsets.symmetric(
+            horizontal: 10.0), // Add padding to the left and right ends
         child: Column(
           children: imagePathsList.map((imagePaths) {
             return Padding(
-              padding: EdgeInsets.symmetric(vertical: 20.0), // Add vertical padding between rows
+              padding: EdgeInsets.symmetric(
+                  vertical: 20.0), // Add vertical padding between rows
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly, // Align icons horizontally
+                mainAxisAlignment:
+                    MainAxisAlignment.spaceEvenly, // Align icons horizontally
                 children: imagePaths.map((imagePath) {
                   return Flexible(
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly, // Align icons vertically in the center
+                      mainAxisAlignment: MainAxisAlignment
+                          .spaceEvenly, // Align icons vertically in the center
                       children: [
                         ClipOval(
                           child: Image.asset(
                             imagePath,
                             width: 51.0, // Set a fixed width for the image
                             height: 51.0, // Set a fixed height for the image
-                            fit: BoxFit.cover, // Use BoxFit.cover to scale the image to fill the container
-                            cacheWidth: 400, // Adjust the cacheWidth based on your needs
-                            cacheHeight: 400, // Adjust the cacheHeight based on your needs
+                            fit: BoxFit
+                                .cover, // Use BoxFit.cover to scale the image to fill the container
+                            cacheWidth:
+                                400, // Adjust the cacheWidth based on your needs
+                            cacheHeight:
+                                400, // Adjust the cacheHeight based on your needs
                           ),
                         ),
                         SizedBox(height: 7.0), // Adjust spacing
@@ -532,3 +358,125 @@ class ContainerWithIcons extends StatelessWidget {
     );
   }
 }
+
+class HeaderOveright extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Positioned(
+          child: ClipPath(
+            child: Container(
+              width: 355.0,
+              height: 200.0,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Color(0xFFE19297), // Custom color 1
+                    Color(0xFFE7AEB7), // Custom color 2
+                    Color(0xFFEEEDF5), // Custom color 3
+                  ],
+                ),
+                borderRadius: BorderRadius.circular(30.0),
+              ),
+            ),
+          ),
+        ),
+        Positioned(
+          top: 0.0,
+          left: 225.0,
+          child: Stack(
+            children: [
+              Container(
+                width: 160.0,
+                height: 51.0,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Color(0xFFCA6A7D),
+                      Color(0xFFCC7289),
+                    ],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  ),
+                  borderRadius: BorderRadius.circular(30.0),
+                ),
+              ),
+              Center(
+                child: Container(
+                  height: 45.0,
+                  width: 125.0, // Adjust the width as needed
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(
+                        20.0), // Circular corners for the Container
+                    gradient: LinearGradient(
+                      colors: [Color(0xFFD07C7F), Color(0xFFD6727E)],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    ),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                        left: 10.0,
+                        // bottom: 5.0,
+                        // right: 5.0,
+                        top: 0.0), // Adjust the left and top padding as needed
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.black,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                              20.0), // Circular corners for the Button
+                        ),
+                      ),
+                      onPressed: () {
+                        // Add your button's action here
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Button ',
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                          Icon(
+                            Icons.keyboard_arrow_down, // Downward arrow icon
+                            color: Colors.white,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+
+class ImageSection extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(top: 25.0, left: 20.0, right: 20.0),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(15.0),
+        child: Image.asset(
+          'assets/p1.png', // Replace with your image URL
+          // width: 200, // Adjust the width as needed
+          height: 170, // Adjust the height as needed
+          fit: BoxFit.cover, // Adjust the fit as needed
+        ),
+      ),
+    );
+  }
+}
+

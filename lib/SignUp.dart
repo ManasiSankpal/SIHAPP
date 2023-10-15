@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'GoogleSignUp.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -11,28 +11,31 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _passwordController1 = TextEditingController(); // Changed from TextEditingController1
-  bool _isSigningUp = false; // Track sign-up state
+  final TextEditingController _passwordController1 = TextEditingController();
+  bool _isSigningUp = false;
 
   Future<void> _signUp() async {
     setState(() {
-      _isSigningUp = true; // Start the sign-up process
+      _isSigningUp = true;
     });
 
     try {
+      final String name = _nameController.text.trim();
       final String email = _emailController.text.trim();
-      final String password = _passwordController.text.trim(); // Changed from passwordController1
-      final String confirmPassword = _passwordController1.text.trim(); // Changed from passwordController1
-      if (email.isEmpty || password.isEmpty) {
+      final String password = _passwordController.text.trim();
+      final String confirmPassword = _passwordController1.text.trim();
+
+      if (name.isEmpty || email.isEmpty || password.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Please enter a valid email and password.')),
+          SnackBar(content: Text('Please enter a valid name, email, and password.')),
         );
         return;
       }
 
-      if (password != confirmPassword) { // Check if passwords match
+      if (password != confirmPassword) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Passwords do not match.')),
         );
@@ -46,7 +49,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
       if (userCredential.user != null) {
         final User? user = userCredential.user;
-        // Send email verification if the user is not null
+
+        // You can also save user data to Firebase Firestore or Realtime Database here.
+        // Store user data in Firebase Firestore
+        await FirebaseFirestore.instance.collection('users').doc(user!.uid).set({
+          'name': name,
+          'email': email,
+          'password':password,
+        });
+
         await user?.sendEmailVerification();
 
         ScaffoldMessenger.of(context).showSnackBar(
@@ -58,13 +69,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
         );
       }
     } catch (e) {
-      // Handle registration errors (e.g., email already in use)
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error: $e')),
       );
     } finally {
       setState(() {
-        _isSigningUp = false; // End the sign-up process
+        _isSigningUp = false;
       });
     }
   }
@@ -77,7 +87,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
       ),
       body: Stack(
         children: [
-          // Background image
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
@@ -86,9 +95,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
             ),
           ),
-          // Content container
           Container(
-            color: Colors.transparent, // Make this container transparent
+            color: Colors.transparent,
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Center(
@@ -116,6 +124,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               TextFormField(
+                                controller: _nameController,
+                                decoration: InputDecoration(labelText: 'Name'),
+                                validator: (String? value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please enter your name';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              SizedBox(height: 16.0),
+                              TextFormField(
                                 controller: _emailController,
                                 keyboardType: TextInputType.emailAddress,
                                 decoration: InputDecoration(labelText: 'Email'),
@@ -132,8 +151,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               TextFormField(
                                 controller: _passwordController,
                                 obscureText: true,
-                                decoration: InputDecoration(
-                                    labelText: 'Password'),
+                                decoration: InputDecoration(labelText: 'Password'),
                                 validator: (String? value) {
                                   if (value == null ||
                                       value.isEmpty ||
@@ -147,8 +165,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               TextFormField(
                                 controller: _passwordController1,
                                 obscureText: true,
-                                decoration: InputDecoration(
-                                    labelText: 'Re-Enter Password'),
+                                decoration: InputDecoration(labelText: 'Re-Enter Password'),
                                 validator: (String? value) {
                                   if (value == null ||
                                       value.isEmpty ||
@@ -163,7 +180,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 onPressed: _isSigningUp ? null : _signUp,
                                 child: _isSigningUp
                                     ? CircularProgressIndicator()
-                                    : Text('Sign In'),
+                                    : Text('Sign Up'),
                                 style: ElevatedButton.styleFrom(
                                   primary: Color(0xFF000000),
                                   shape: RoundedRectangleBorder(

@@ -1,10 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:sihapp/HomeScreen.dart';
+import 'package:page_transition/page_transition.dart';
 
+
+PageTransition customPageTransition(Widget page) {
+  return PageTransition(
+    type: PageTransitionType.rightToLeft,
+    child: page,
+  );
+}
 class LostAndFoundPage extends StatefulWidget {
   @override
   _LostAndFoundPageState createState() => _LostAndFoundPageState();
 }
+
+
 
 class _LostAndFoundPageState extends State<LostAndFoundPage> {
   @override
@@ -12,12 +22,8 @@ class _LostAndFoundPageState extends State<LostAndFoundPage> {
     return WillPopScope(
         onWillPop: () async {
       // Handle the back button press
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => HomeScreen(),
-        ),
-      );
-      return true; // Return true to allow the back button press
+          Navigator.of(context).pop(customPageTransition(HomeScreen()));
+          return true; // Return true to allow the back button press
     },
     child: Scaffold(
       backgroundColor: Colors.white,

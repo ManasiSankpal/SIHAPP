@@ -1,5 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:sihapp/HomeScreen.dart';
+import 'package:page_transition/page_transition.dart';
+
+PageTransition customPageTransition(Widget page) {
+  return PageTransition(
+    type: PageTransitionType.rightToLeft,
+    child: page,
+  );
+}
 
 class AnnouncementPage extends StatelessWidget {
   @override
@@ -7,17 +15,13 @@ class AnnouncementPage extends StatelessWidget {
     return WillPopScope(
       onWillPop: () async {
         // Handle the back button press here
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-            builder: (context) => HomeScreen(),
-          ),
-        );
+        Navigator.of(context).pop(customPageTransition(HomeScreen()));
         return false; // Return false to prevent default back button behavior
       },
       child: MaterialApp(
         home: NotificationPage(),
         theme: ThemeData(
-          scaffoldBackgroundColor: Colors.grey[900],
+          scaffoldBackgroundColor: Colors.white, // Set the background color to white
           primaryColor: Colors.blue,
           appBarTheme: AppBarTheme(
             backgroundColor: Colors.blue,
@@ -27,7 +31,6 @@ class AnnouncementPage extends StatelessWidget {
     );
   }
 }
-
 
 class NotificationPage extends StatefulWidget {
   @override
@@ -41,9 +44,9 @@ class _NotificationPageState extends State<NotificationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Notifications', style: TextStyle(color: Colors.white)), // Set app bar text color
+        title: Text('Notifications', style: TextStyle(color: Colors.white)),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: Icon(Icons.arrow_back, color: Colors.white), // Set icon color
           onPressed: () {
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
@@ -54,7 +57,7 @@ class _NotificationPageState extends State<NotificationPage> {
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.search, color: Colors.white), // Set search icon color
+            icon: Icon(Icons.search, color: Colors.white),
             onPressed: () {
               // Implement search functionality
             },
@@ -65,7 +68,7 @@ class _NotificationPageState extends State<NotificationPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildButtons(),
-          Divider(color: Colors.white), // Add a divider with white color
+          Divider(color: Colors.black), // Change the divider color to black
           _buildTabContent(_selectedTabIndex),
         ],
       ),
@@ -73,8 +76,8 @@ class _NotificationPageState extends State<NotificationPage> {
         onPressed: () {
           // Implement a new notification action
         },
-        child: Icon(Icons.add, color: Colors.white), // Set the FAB icon color to blue
-        backgroundColor: Colors.lightBlue, // Set the FAB's background color to white
+        child: Icon(Icons.add, color: Colors.white),
+        backgroundColor: Colors.lightBlue,
       ),
     );
   }
@@ -100,14 +103,14 @@ class _NotificationPageState extends State<NotificationPage> {
       child: ElevatedButton(
         onPressed: () {
           setState(() {
-            _selectedTabIndex = index; // Update the selected tab index
+            _selectedTabIndex = index;
           });
         },
         style: ElevatedButton.styleFrom(
-          primary: isSelected ? Colors.blue : Colors.white, // Set button color based on selection
-          onPrimary: isSelected ? Colors.white : Colors.black, // Set button text color based on selection
+          primary: isSelected ? Colors.blue : Colors.white,
+          onPrimary: isSelected ? Colors.white : Colors.black,
           side: BorderSide(
-            color: isSelected ? Colors.blue : Colors.black, // Set button border color based on selection
+            color: isSelected ? Colors.blue : Colors.black,
           ),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20.0),
@@ -136,105 +139,6 @@ class _NotificationPageState extends State<NotificationPage> {
 }
 
 class AllNotifications extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: ListView(
-        children: [
-          // Add your All notifications here
-          NotificationItem(
-            title: 'Train Delay',
-            subtitle: 'Today | 10:30 AM',
-            message: 'Train ABC is delayed by 30 minutes.',
-            isNew: true,
-          ),
-
-          NotificationItem(
-            title: 'Platform Change',
-            subtitle: 'Yesterday | 3:45 PM',
-            message: 'Train XYZ now departs from Platform 2.',
-            isNew: true,
-          ),
-
-          NotificationItem(
-            title: 'Ticket Booking',
-            subtitle: 'Yesterday | 5:00 PM',
-            message: 'Your ticket for Train DEF has been confirmed.',
-            isNew: false,
-          ),
-          NotificationItem(
-            title: 'Ticket Cancellation',
-            subtitle: 'Yesterday | 2:15 PM',
-            message: 'Your ticket for Train GHI has been canceled successfully.',
-            isNew: false,
-          ),
-
-          NotificationItem(
-            title: 'Special Discount',
-            subtitle: 'Today | 11:45 AM',
-            message: 'Get a 20% discount on first-class tickets this weekend.',
-            isNew: false,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class AlertNotifications extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: ListView(
-        children: [
-          // Add your Alert notifications here
-          NotificationItem(
-            title: 'Emergency Alert',
-            subtitle: 'Today | 1:30 PM',
-            message: 'Emergency evacuation drill scheduled for tomorrow at Station PQR.',
-            isNew: true,
-          ),NotificationItem(
-            title: 'Weather Advisory',
-            subtitle: 'Tomorrow | 7:00 AM',
-            message: 'Severe weather conditions expected. Check for service updates.',
-            isNew: true,
-          ),
-
-          NotificationItem(
-            title: 'Platform Closure',
-            subtitle: 'Next Week | 9:15 AM',
-            message: 'Platform QRS will be closed for maintenance next week.',
-            isNew: true,
-          ),
-
-
-          NotificationItem(
-            title: 'Service Disruption',
-            subtitle: 'Yesterday | 4:45 PM',
-            message: 'Train services temporarily disrupted due to technical issues.',
-            isNew: false,
-          ),
-
-          NotificationItem(
-            title: 'Weather Advisory',
-            subtitle: 'Tomorrow | 7:00 AM',
-            message: 'Severe weather conditions expected. Check for service updates.',
-            isNew: false,
-          ),
-
-          NotificationItem(
-            title: 'Platform Closure',
-            subtitle: 'Next Week | 9:15 AM',
-            message: 'Platform QRS will be closed for maintenance next week.',
-            isNew: false,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class PromotionNotifications extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -294,6 +198,105 @@ class PromotionNotifications extends StatelessWidget {
   }
 }
 
+class AlertNotifications extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: ListView(
+        children: [
+          // Add your All notifications here
+          NotificationItem(
+            title: 'Train Delay',
+            subtitle: 'Today | 10:30 AM',
+            message: 'Train ABC is delayed by 30 minutes.',
+            isNew: true,
+          ),
+
+          NotificationItem(
+            title: 'Platform Change',
+            subtitle: 'Yesterday | 3:45 PM',
+            message: 'Train XYZ now departs from Platform 2.',
+            isNew: true,
+          ),
+
+          NotificationItem(
+            title: 'Ticket Booking',
+            subtitle: 'Yesterday | 5:00 PM',
+            message: 'Your ticket for Train DEF has been confirmed.',
+            isNew: false,
+          ),
+          NotificationItem(
+            title: 'Ticket Cancellation',
+            subtitle: 'Yesterday | 2:15 PM',
+            message: 'Your ticket for Train GHI has been canceled successfully.',
+            isNew: false,
+          ),
+
+          NotificationItem(
+            title: 'Special Discount',
+            subtitle: 'Today | 11:45 AM',
+            message: 'Get a 20% discount on first-class tickets this weekend.',
+            isNew: false,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class PromotionNotifications extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: ListView(
+        children: [
+          // Add your Alert notifications here
+          NotificationItem(
+            title: 'Emergency Alert',
+            subtitle: 'Today | 1:30 PM',
+            message: 'Emergency evacuation drill scheduled for tomorrow at Station PQR.',
+            isNew: true,
+          ),NotificationItem(
+            title: 'Weather Advisory',
+            subtitle: 'Tomorrow | 7:00 AM',
+            message: 'Severe weather conditions expected. Check for service updates.',
+            isNew: true,
+          ),
+
+          NotificationItem(
+            title: 'Platform Closure',
+            subtitle: 'Next Week | 9:15 AM',
+            message: 'Platform QRS will be closed for maintenance next week.',
+            isNew: true,
+          ),
+
+
+          NotificationItem(
+            title: 'Service Disruption',
+            subtitle: 'Yesterday | 4:45 PM',
+            message: 'Train services temporarily disrupted due to technical issues.',
+            isNew: false,
+          ),
+
+          NotificationItem(
+            title: 'Weather Advisory',
+            subtitle: 'Tomorrow | 7:00 AM',
+            message: 'Severe weather conditions expected. Check for service updates.',
+            isNew: false,
+          ),
+
+          NotificationItem(
+            title: 'Platform Closure',
+            subtitle: 'Next Week | 9:15 AM',
+            message: 'Platform QRS will be closed for maintenance next week.',
+            isNew: false,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class NotificationItem extends StatefulWidget {
   final String title;
   final String subtitle;
@@ -318,18 +321,22 @@ class _NotificationItemState extends State<NotificationItem> {
     return Column(
       children: [
         ListTile(
-          contentPadding: EdgeInsets.all(16.0), // Add padding to the ListTile
-          leading: Container( // Display the circular icon for all notifications
+          contentPadding: EdgeInsets.all(16.0),
+          leading: Container(
             width: 48.0,
             height: 48.0,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: Colors.white, // Set the desired background color to white
+              color: Colors.white,
+              border: Border.all(
+                color: Colors.black, // Set the border color to black
+                width: 2.0, // Set the border width
+              ),
             ),
             child: Center(
               child: Icon(
-                Icons.notifications, // You can change the icon to your preference
-                color: Colors.black, // Set the icon color to black
+                Icons.notifications,
+                color: Colors.black,
               ),
             ),
           ),
@@ -337,14 +344,17 @@ class _NotificationItemState extends State<NotificationItem> {
             widget.title,
             style: TextStyle(
               fontWeight: FontWeight.bold,
-              color: Colors.white, // Set text color to white
+              color: Colors.black, // Set text color to black
             ),
           ),
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: 4.0),
-              Text(widget.subtitle, style: TextStyle(color: Colors.white)), // Set subtitle text color to white
+              Text(
+                widget.subtitle,
+                style: TextStyle(color: Colors.black), // Set subtitle text color to black
+              ),
               SizedBox(height: 4.0),
               Text(
                 widget.message,
@@ -354,14 +364,15 @@ class _NotificationItemState extends State<NotificationItem> {
               ),
             ],
           ),
+
           trailing: Container(
             padding: EdgeInsets.all(8.0),
             decoration: BoxDecoration(
-              color: widget.isNew ? Colors.green : Colors.transparent, // Change colors
+              color: widget.isNew ? Colors.green : Colors.transparent,
               borderRadius: BorderRadius.circular(10.0),
             ),
             child: Text(
-              widget.isNew ? 'New' : '', // Show 'New' based on isNew
+              widget.isNew ? 'New' : '',
               style: TextStyle(
                 color: Colors.white, // Set text color to white
                 fontWeight: FontWeight.bold,
@@ -369,7 +380,7 @@ class _NotificationItemState extends State<NotificationItem> {
             ),
           ),
         ),
-        SizedBox(height: 0.0), // No gap between notifications
+        SizedBox(height: 0.0),
       ],
     );
   }

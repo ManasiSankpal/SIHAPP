@@ -1,171 +1,182 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:sihapp/HomeScreen.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
-class FeedbackForm extends StatelessWidget {
+class FeedbackForm extends StatefulWidget {
+  @override
+  _FeedbackFormState createState() => _FeedbackFormState();
+}
+
+class _FeedbackFormState extends State<FeedbackForm> {
   double rating = 0.0;
   String feedback = '';
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-        onWillPop: () async {
-      // Handle the back button press
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => HomeScreen(),
-        ),
-      );
-      return true; // Return true to allow the back button press
-    },
-    child: Scaffold(
+    return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text('Feedback Form'),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(
-                builder: (context) => HomeScreen(),
-              ),
-            );
+            Navigator.of(context).pop();
           },
         ),
       ),
-      body: Stack(
-        children: [
-          // Background image
-          Image.asset(
-            'assets/img_1.png',
-            fit: BoxFit.cover,
-            width: double.infinity,
-            height: double.infinity,
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // Feedback form text
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text(
-                  'Feedback Form',
-                  style: TextStyle(
-                    fontSize: 34.0,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white, // Set the text color
-                  ),
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(
+                'Submit Your Feedback....',
+                style: TextStyle(
+                  fontSize: 25.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
                 ),
               ),
-              // Form content
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                child: Scrollbar( // Wrap with Scrollbar
-                  child: SingleChildScrollView(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(26.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  TextFormField(
+                    decoration: InputDecoration(
+                      labelText: 'Name',
+                      hintText: 'Enter your Name',
+                      prefixIcon:
+                      Icon(Icons.contacts_sharp, color: Colors.purple),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(40.0),
+                      ),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your Name';
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(height: 26.0),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      labelText: 'Email Address',
+                      hintText: 'Enter your email address',
+                      prefixIcon: Icon(Icons.email, color: Colors.purple),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(40.0),
+                      ),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your email address.';
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(height: 26.0),
+                  Text(
+                    'Please rate your experience:',
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  RatingBar.builder(
+                    initialRating: 3,
+                    minRating: 1,
+                    direction: Axis.horizontal,
+                    allowHalfRating: true,
+                    itemCount: 5,
+                    itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                    itemBuilder: (context, _) => Icon(
+                      Icons.star,
+                      color: Colors.amber,
+                    ),
+                    onRatingUpdate: (rating) {
+                      print(rating);
+                    },
+                  ),
+                  SizedBox(height: 20.0),
+                  Text(
+                    'Please share your feedback:',
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 16.0),
+                  TextFormField(
+                    maxLines: 5,
+                    decoration: InputDecoration(
+                      hintText: 'Enter your feedback here...',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                    ),
+                    onChanged: (value) {
+                      feedback = value;
+                    },
+                  ),
+                  SizedBox(height: 16.0),
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      // Handle form submission here (e.g., send feedback to a server)
+                      print('Rating: $rating');
+                      print('Feedback: $feedback');
+                    },
+                    style: ElevatedButton.styleFrom(
+                      padding: EdgeInsets.all(15),
+                      elevation: 0,
+                      primary: Colors.transparent,
+                    ),
+                    icon: Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            Color(0xFF5B9FCC),
+                            Color(0xFF187EC3),
+                          ],
+                          begin: Alignment.centerLeft,
+                          end: Alignment.centerRight,
+                        ),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      width: 302.0,
+                      height: 40.0,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          TextFormField(
-                            decoration: InputDecoration(
-                              labelText: 'Name',
-                              hintText: 'Enter your Name',
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                            ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter your Name';
-                              }
-                              return null;
-                            },
-                          ),
-                          SizedBox(height: 26.0),
-                          TextFormField(
-                            decoration: InputDecoration(
-                              labelText: 'Email Address',
-                              hintText: 'Enter your email address',
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                            ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter your email address.';
-                              }
-                              return null;
-                            },
-                          ),
                           Text(
-                            'Please rate your experience:',
+                            'Reset Password',
                             style: TextStyle(
-                              fontSize: 18.0,
+                              fontSize: 18,
                               fontWeight: FontWeight.bold,
+                              color: Colors.white,
                             ),
                           ),
-                          RatingBar.builder(
-                            initialRating: rating,
-                            minRating: 1,
-                            direction: Axis.horizontal,
-                            allowHalfRating: true,
-                            itemCount: 5,
-                            itemSize: 40.0,
-                            itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-                            itemBuilder: (context, _) => Icon(
-                              Icons.star,
-                              color: Colors.amber,
-                            ),
-                            onRatingUpdate: (newRating) {
-                              rating = newRating;
-                            },
-                          ),
-                          SizedBox(height: 16.0),
-                          Text(
-                            'Please share your feedback:',
-                            style: TextStyle(
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          TextFormField(
-                            maxLines: 5,
-                            decoration: InputDecoration(
-                              hintText: 'Enter your feedback here...',
-                              border: OutlineInputBorder(),
-                            ),
-                            onChanged: (value) {
-                              feedback = value;
-                            },
-                          ),
-                          SizedBox(height: 16.0),
-                          ElevatedButton(
-                            onPressed: () {
-                              // Handle form submission here (e.g., send feedback to a server)
-                              print('Rating: $rating');
-                              print('Feedback: $feedback');
-                            },
-                            child: Text('Submit'),
+                          SizedBox(width: 10), // Add some spacing between text and icon
+                          Icon(
+                            Icons.arrow_forward,
+                            size: 30,
+                            color: Colors.white,
                           ),
                         ],
                       ),
                     ),
+                    label: Text(''),
                   ),
-                ),
+                ],
               ),
-            ],
-          ),
-        ],
-      ),
-    ),);
-  }
-}
+            ),
 
-void main() {
-  runApp(MaterialApp(
-    home: FeedbackForm(),
-  ));
+          ],
+        ),
+      ),
+    );
+  }
 }
