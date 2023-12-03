@@ -61,9 +61,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       colors: [
-                        Color(0xFFB2819E), // Start color
-                        Color(0xFFD78182), // Middle color
-                        Color(0xFFCE637F), // End color
+                        Color(0xFF6415EA), // Middle color
+                        Color(0xFF2A62EE), // Start color
+                        Color(0xFF63B1CE), // End color
                         Color(0xFFFFFFFF), // End color
                         Color(0xFFFFFFFF), // End color
                       ],
@@ -126,11 +126,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
               ImageSection(),
 
+              // Second section:
+              ContainerWithIcons(),
               // First section:
               AccountSummarySection(),
 
-              // Second section:
-              ContainerWithIcons(),
 
               // Third section:
               TrainSummarySection(),
@@ -374,9 +374,9 @@ class HeaderOveright extends StatelessWidget {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    Color(0xFFE19297), // Custom color 1
-                    Color(0xFFE7AEB7), // Custom color 2
-                    Color(0xFFEEEDF5), // Custom color 3
+                    Color(0xFF5086E8), // Middle color
+                    Color(0xFF6E91EC), // Start color
+                    Color(0xFFA8D5E5), // End color
                   ],
                 ),
                 borderRadius: BorderRadius.circular(30.0),
@@ -395,8 +395,8 @@ class HeaderOveright extends StatelessWidget {
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      Color(0xFFCA6A7D),
-                      Color(0xFFCC7289),
+                      Color(0xFF6E91EC), // Start colorColor(0xFFCA6A7D),
+                      Color(0xFFA8D5E5), // End color
                     ],
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
@@ -412,7 +412,10 @@ class HeaderOveright extends StatelessWidget {
                     borderRadius: BorderRadius.circular(
                         20.0), // Circular corners for the Container
                     gradient: LinearGradient(
-                      colors: [Color(0xFFD07C7F), Color(0xFFD6727E)],
+                      colors: [
+                        Color(0xFF6E91EC), // Start colorColor(0xFFCA6A7D),
+                        Color(0xFFA8D5E5), // End color
+                      ],
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                     ),

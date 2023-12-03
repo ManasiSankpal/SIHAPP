@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:share/share.dart';
+import 'package:page_transition/page_transition.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sihapp/ChatBoat2.dart';
 import 'package:sihapp/FeedBack.dart';
-import 'package:share/share.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:page_transition/page_transition.dart';
 import 'package:sihapp/ProfilePage.dart';
 
 PageTransition customPageTransition(Widget page) {
@@ -20,17 +20,18 @@ final FirebaseAuth _auth = FirebaseAuth.instance;
 Future<void> _signOut(BuildContext context) async {
   try {
     await _auth.signOut();
-
     // Clear user's login state
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setBool('isLoggedIn', false); // Set isLoggedIn to false
 
-    // Navigate to the LoginScreen
-    Navigator.of(context).pushReplacementNamed('/login');
+    // Navigate to the LoginScreen and remove all previous routes from the stack
+    Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
   } catch (e) {
     print('Error during sign out: $e');
   }
 }
+
+
 
 Future<void> _showSignOutConfirmationDialog(BuildContext context) async {
   return showDialog<void>(
@@ -60,7 +61,6 @@ Future<void> _showSignOutConfirmationDialog(BuildContext context) async {
 }
 
 class MenuScreen extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     User? user = _auth.currentUser;
@@ -88,7 +88,7 @@ class MenuScreen extends StatelessWidget {
               accountName: Text(user?.displayName ?? 'N/A'),
               accountEmail: Text(email),
               currentAccountPicture: CircleAvatar(
-                backgroundImage: AssetImage('assets/profile.jpg'),
+                backgroundImage: AssetImage('assets/Profile.webp'),
               ),
             ),
             ListTile(
@@ -102,7 +102,8 @@ class MenuScreen extends StatelessWidget {
               leading: Icon(Icons.feedback),
               title: Text('FeedBack'),
               onTap: () {
-                Navigator.of(context).push(customPageTransition(FeedbackForm()));
+                Navigator.of(context)
+                    .push(customPageTransition(FeedbackForm()));
               },
             ),
             ListTile(
@@ -124,10 +125,10 @@ class MenuScreen extends StatelessWidget {
               leading: Icon(Icons.chat_bubble),
               title: Text('Chat Bot'),
               onTap: () {
-                Navigator.of(context).push(customPageTransition(ChatbotScreen()));
+                Navigator.of(context)
+                    .push(customPageTransition(ChatbotScreen()));
               },
             ),
-
             Divider(),
             ListTile(
               leading: Icon(Icons.logout),

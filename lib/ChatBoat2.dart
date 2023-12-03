@@ -100,17 +100,26 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
     },
 
     child: Scaffold(
-
       key: _scaffoldKey,
       appBar: AppBar(
         title: Text('Eva: Your Guide to Infinite Possibilities'),
         leading: IconButton(
-          icon: Icon(Icons.menu),
+          icon: Icon(Icons.arrow_back),
           onPressed: () {
-            _scaffoldKey.currentState?.openDrawer();
+            Navigator.of(context).pop();
           },
         ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.menu),
+            onPressed: () {
+              _scaffoldKey.currentState?.openDrawer();
+            },
+          ),
+        ],
       ),
+
+
       drawer: Drawer(
         child: ListView(
           children: <Widget>[

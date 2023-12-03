@@ -152,7 +152,7 @@ class _FeedbackFormState extends State<FeedbackForm> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            'Reset Password',
+                            'Submit Feedback',
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
