@@ -5,7 +5,9 @@ import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sihapp/ChatBoat2.dart';
 import 'package:sihapp/FeedBack.dart';
+import 'package:sihapp/HomeScreen.dart';
 import 'package:sihapp/ProfilePage.dart';
+import 'package:sihapp/chatbot3.dart';
 
 PageTransition customPageTransition(Widget page) {
   return PageTransition(
@@ -88,14 +90,15 @@ class MenuScreen extends StatelessWidget {
               accountName: Text(user?.displayName ?? 'N/A'),
               accountEmail: Text(email),
               currentAccountPicture: CircleAvatar(
-                backgroundImage: AssetImage('assets/Profile.webp'),
+                backgroundImage: AssetImage('assets/default_avatar.png'),
               ),
             ),
             ListTile(
               leading: Icon(Icons.home),
               title: Text('Home'),
               onTap: () {
-                // Navigator.of(context).pop();
+                Navigator.of(context)
+                    .push(customPageTransition(HomeScreen()));
               },
             ),
             ListTile(
@@ -126,7 +129,7 @@ class MenuScreen extends StatelessWidget {
               title: Text('Chat Bot'),
               onTap: () {
                 Navigator.of(context)
-                    .push(customPageTransition(ChatbotScreen()));
+                    .push(customPageTransition(ChatbotScreen1()));
               },
             ),
             Divider(),

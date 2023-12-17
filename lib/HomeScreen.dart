@@ -1,24 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
+import 'package:sihapp/ChatBoat2.dart';
 import 'package:sihapp/IconSlider.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:sihapp/UpcomingTripCard.dart';
+import 'package:sihapp/announcements_strip.dart';
+import 'package:sihapp/chatbot3.dart';
 import 'package:sihapp/lineWithCircles.dart';
 import 'package:sihapp/TrainSummary Section.dart';
-import 'package:sihapp/myBottomNavigation.dart';
+import 'package:sihapp/menu.dart';
 
-int _selectedIndex = 0;
+void main() {
+  runApp(MaterialApp(
+    home: HomeScreen(),
+  ));
+}
 
 class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
-}
-
-PageTransition customPageTransition(Widget page) {
-  return PageTransition(
-    type: PageTransitionType.rightToLeft,
-    child: page,
-  );
 }
 
 class _HomeScreenState extends State<HomeScreen> {
@@ -35,167 +37,116 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    int _selectedIndex = 0;
-
-    void _onItemTapped(int index) {
-      setState(() {
-        _selectedIndex = index;
-      });
-    }
-
     return Scaffold(
-      backgroundColor: Colors.white, // Set the background color to light black
-
-      body: Stack(
+      backgroundColor: Colors.white,
+      // Remove the appBar
+      body: ListView(
+        padding: EdgeInsets.all(0),
         children: [
           // Background Image (if needed)
-          // Content
-          ListView(
-            padding: EdgeInsets.all(0), // Remove top padding
-            children: [
-              SizedBox(
-                height: 350.0,
-                child: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Color(0xFF6415EA), // Middle color
-                        Color(0xFF2A62EE), // Start color
-                        Color(0xFF63B1CE), // End color
-                        Color(0xFFFFFFFF), // End color
-                        Color(0xFFFFFFFF), // End color
-                      ],
-                    ),
-                  ),
-                  child: Stack(
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
+          Container(
+            height: 350.0,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Color(0xFF6415EA),
+                  Color(0xFF2A62EE),
+                  Color(0xFF63B1CE),
+                  Color(0xFFFFFFFF),
+                  Color(0xFFFFFFFF),
+                ],
+              ),
+            ),
+            child: Stack(
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        top: 50,
+                        left: 15,
+                        right: 25,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                top: 40, left: 25, right: 25),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "Welcome, Users", // Your first text here
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 20,
-                                        // fontWeight: FontWeight.w500, // Medium text weight
-                                      ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.home,
+                                    color: Colors.white,
+                                    size: 30,
+                                  ),
+                                  SizedBox(width: 8),
+                                  Text(
+                                    "Welcome To IRCTC",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 20,
                                     ),
-                                    Text(
-                                      "Your Questions Our Answers!", // Your second text here
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize:
-                                            20, // Adjust the font size as needed
-                                      ),
-                                    ),
-                                  ],
+                                  ),
+                                ],
+                              ),
+                              Text(
+                                "      Your journey begins here..",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 20,
                                 ),
-                                Icon(
-                                  Icons
-                                      .account_circle, // Replace with your user icon
-                                  color: Color(0xFFDADDEE),
-                                  size: 40,
-                                ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
-                          SizedBox(height: 60.0),
-                          HeaderOveright(),
                         ],
                       ),
-                    ],
-                  ),
-                ),
-              ),
-
-              SliderIconSection(),
-
-              IconSlider(),
-
-              ImageSection(),
-
-              // Second section:
-              ContainerWithIcons(),
-              // First section:
-              AccountSummarySection(),
-
-
-              // Third section:
-              TrainSummarySection(),
-
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Card(
-                  color: Colors
-                      .lightBlue[100], // Set the background color to light blue
-                  elevation: 5, // Add elevation for a card-like effect
-                  shape: RoundedRectangleBorder(
-                    borderRadius:
-                        BorderRadius.circular(15.0), // Set circular radius
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(
-                        16.0), // Add inner padding for space within the Card
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Upcoming Trip',
-                          style: TextStyle(
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(height: 8.0),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('HK789KOG'),
-                            Text('Malabar (119) Economy (CA)'),
-                          ],
-                        ),
-                        SizedBox(height: 8.0),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('Yogyakarta (YK)'),
-                            Text('Bandung (BD)'),
-                          ],
-                        ),
-                        SizedBox(height: 8.0),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('19:30 WIB'),
-                            Text('06:30 WIS'),
-                          ],
-                        ),
-                        SizedBox(height: 8.0),
-                      ],
                     ),
-                  ),
+
+                    SizedBox(height: 60.0),
+                    Center(
+                      child: Column(
+                        children: [
+                          AnimatedRippleIcon(),
+
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
+          //SizedBox(height: 16.0),
+          // Other widgets in the ListView...
+          AnnouncementStrip(), // Insert the announcement strip here
+          IconSlider(),
+          TrainSummarySection(),
+          UpcomingTripCard(),
+          ImageSection(),
+          ContainerWithIcons(),
+          Text("*For Your Advertisement, Contact Us.",style: (TextStyle(fontWeight: FontWeight.bold,fontSize: 16,color: Colors.redAccent)),),
+          AccountSummarySection(),
+
         ],
       ),
-      bottomNavigationBar: MyBottomNavigationBar(
-        // Use the imported class
-        selectedIndex: _selectedIndex,
-        onItemTapped: _onItemTapped,
+      // Add a menu icon at the top right
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(left: 16.0, top: 46.0),
+        child: Align(
+          alignment: Alignment.topRight,
+          child: FloatingActionButton(
+            backgroundColor: Colors.white,
+            onPressed: () {
+              Navigator.of(context).push(customPageTransition(MenuScreen()));
+            },
+            child: Icon(Icons.menu, color: Colors.black),
+          ),
+        ),
       ),
     );
   }
@@ -252,9 +203,9 @@ class AccountSummarySection extends StatelessWidget {
                               height: 200.0,
                               fit: BoxFit.cover,
                               cacheWidth:
-                                  2000, // Adjust the cacheWidth based on your needs
+                              2000, // Adjust the cacheWidth based on your needs
                               cacheHeight:
-                                  2000, // Adjust the cacheHeight based on your needs
+                              2000, // Adjust the cacheHeight based on your needs
                             ),
                           );
                         },
@@ -313,7 +264,7 @@ class ContainerWithIcons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(top: 30.0), // Add top padding
+      padding: EdgeInsets.only(top: 20.0), // Add top padding
       child: Container(
         height: 310.0, // Adjust the height for multiple rows
         padding: EdgeInsets.symmetric(
@@ -325,13 +276,14 @@ class ContainerWithIcons extends StatelessWidget {
                   vertical: 20.0), // Add vertical padding between rows
               child: Row(
                 mainAxisAlignment:
-                    MainAxisAlignment.spaceEvenly, // Align icons horizontally
+                MainAxisAlignment.spaceEvenly, // Align icons horizontally
                 children: imagePaths.map((imagePath) {
                   return Flexible(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment
                           .spaceEvenly, // Align icons vertically in the center
                       children: [
+
                         ClipOval(
                           child: Image.asset(
                             imagePath,
@@ -340,9 +292,9 @@ class ContainerWithIcons extends StatelessWidget {
                             fit: BoxFit
                                 .cover, // Use BoxFit.cover to scale the image to fill the container
                             cacheWidth:
-                                400, // Adjust the cacheWidth based on your needs
+                            400, // Adjust the cacheWidth based on your needs
                             cacheHeight:
-                                400, // Adjust the cacheHeight based on your needs
+                            400, // Adjust the cacheHeight based on your needs
                           ),
                         ),
                         SizedBox(height: 7.0), // Adjust spacing
@@ -359,112 +311,89 @@ class ContainerWithIcons extends StatelessWidget {
   }
 }
 
-class HeaderOveright extends StatelessWidget {
+class AnimatedRippleIcon extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Positioned(
-          child: ClipPath(
-            child: Container(
-              width: 355.0,
-              height: 200.0,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Color(0xFF5086E8), // Middle color
-                    Color(0xFF6E91EC), // Start color
-                    Color(0xFFA8D5E5), // End color
-                  ],
-                ),
-                borderRadius: BorderRadius.circular(30.0),
-              ),
-            ),
-          ),
-        ),
-        Positioned(
-          top: 0.0,
-          left: 225.0,
-          child: Stack(
-            children: [
-              Container(
-                width: 160.0,
-                height: 51.0,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Color(0xFF6E91EC), // Start colorColor(0xFFCA6A7D),
-                      Color(0xFFA8D5E5), // End color
-                    ],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                  ),
-                  borderRadius: BorderRadius.circular(30.0),
-                ),
-              ),
-              Center(
-                child: Container(
-                  height: 45.0,
-                  width: 125.0, // Adjust the width as needed
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(
-                        20.0), // Circular corners for the Container
-                    gradient: LinearGradient(
-                      colors: [
-                        Color(0xFF6E91EC), // Start colorColor(0xFFCA6A7D),
-                        Color(0xFFA8D5E5), // End color
-                      ],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                    ),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                        left: 10.0,
-                        // bottom: 5.0,
-                        // right: 5.0,
-                        top: 0.0), // Adjust the left and top padding as needed
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.black,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                              20.0), // Circular corners for the Button
-                        ),
-                      ),
-                      onPressed: () {
-                        // Add your button's action here
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Button ',
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
-                          ),
-                          Icon(
-                            Icons.keyboard_arrow_down, // Downward arrow icon
-                            color: Colors.white,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
+  _AnimatedRippleIconState createState() => _AnimatedRippleIconState();
 }
 
+class _AnimatedRippleIconState extends State<AnimatedRippleIcon>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
 
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: 1),
+    );
+
+    _animation = Tween<double>(begin: 1.0, end: 1.2).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.easeInOut,
+      ),
+    )..addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        _controller.reverse();
+      } else if (status == AnimationStatus.dismissed) {
+        _controller.forward();
+      }
+    });
+
+    _controller.forward();
+  }
+
+  void _goToMenuPage() {
+    // Use Navigator to navigate to the chatbot page
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ChatbotScreen1()),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: GestureDetector(
+        onTap: _goToMenuPage,
+        child: AnimatedBuilder(
+          animation: _animation,
+          builder: (context, child) {
+            return Transform.scale(
+              scale: _animation.value,
+              child: Container(
+                width: 150.0,
+                height: 150.0,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: RadialGradient(
+                    colors: [Colors.blue, Colors.transparent],
+                    stops: [5.5, 4.0],
+                  ),
+                ),
+                child: Image.asset(
+                  'assets/chat.png',
+                  width: 150.0,
+                  height: 150.0,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+}
 class ImageSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -482,4 +411,3 @@ class ImageSection extends StatelessWidget {
     );
   }
 }
-

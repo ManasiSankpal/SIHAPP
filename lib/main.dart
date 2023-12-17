@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sihapp/Getstart.dart';
 import 'package:sihapp/HomeScreen.dart';
 import 'package:sihapp/Login.dart';
+import 'package:sihapp/Password_Screen.dart';
 
 
 void main() async {
@@ -20,7 +21,7 @@ void main() async {
     ),
     initialRoute: isLoggedIn ? '/home' : '/login', // Set initial route based on login state
     routes: {
-      '/login': (context) => LoginScreen(),
+      '/login': (context) => LoginPage(),
       '/home': (context) => HomeScreen(),
     },
   ));

@@ -1,22 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:sihapp/AnnouncementPage.dart';
+import 'package:sihapp/LostFound.dart';
+import 'package:sihapp/Map.dart';
+import 'package:sihapp/Translator.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class IconSlider extends StatelessWidget {
-  final List<IconData> icons = [
-    Icons.hotel_rounded,
-    Icons.roofing,
-    Icons.music_note,
-    Icons.cabin,
-    Icons.local_offer,
-    Icons.home,
+  final List<String> iconAssetPaths = [
+    'assets/announce.png',
+    'assets/translator.png',
+    'assets/help_icon.png',
+    'assets/map.png',
+    'assets/hotel_icon.png',
+    'assets/food_bank_icon.png',
+    'assets/music_icon.png',
   ];
 
   final List<String> iconNames = [
+    'Announcements',
+    'Translator',
+    'lost and found',
+    'Map',
     'Hotel',
-    'Rooms',
+    'Food',
     'Music',
-    'Cabins',
-    'Local Offer',
-    'Home',
+
   ];
 
   @override
@@ -25,43 +33,91 @@ class IconSlider extends StatelessWidget {
       height: 120, // Adjust the height as needed
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: icons.length,
+        itemCount: iconAssetPaths.length,
         itemBuilder: (context, index) {
           return Padding(
-            padding: EdgeInsets.only(left: 20.0,top: 15.0), // Add top padding
-            child: Container(
-              width: 85, // Adjust the width of the square background as needed
-              height: 85, // Adjust the height of the square background as needed
-              decoration: BoxDecoration(
-                color: Colors.white, // Background color
-                shape: BoxShape.rectangle, // Square shape
-                border: Border.all(
-                  color: Colors.grey, // Border color
-                  width: 2.0, // Border width
+            padding: EdgeInsets.only(left: 20.0, top: 15.0),
+            child: GestureDetector(
+              onTap: () {
+                if (iconNames[index] == 'Announcements') {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => AnnouncementPage()),
+                  );
+                } else if (iconNames[index] == 'Traslator') {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => TranslatorPage()),
+                 );
+                } else if (iconNames[index] == 'Help for lost and found') {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => LostAndFoundPage()),
+                  );
+                }
+                else if (iconNames[index] == 'Station Map') {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => MapPage()),
+                  );
+                }
+                else {
+                  launchWebsite(index);
+                }
+              },
+              child: Container(
+                width: 95,
+                height: 85,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.rectangle,
+                  border: Border.all(
+                    color: Colors.grey,
+                    width: 3.0,
+                  ),
+                  borderRadius: BorderRadius.circular(12.0),
                 ),
-                borderRadius: BorderRadius.circular(12.0), // Adjust the border radius as needed
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Icon(
-                    icons[index],
-                    size: 36, // Adjust the icon size as needed
-                    color: Colors.grey, // Customize the icon color
-                  ),
-                  SizedBox(height: 4), // Add some spacing between the icon and its name
-                  Text(
-                    iconNames[index],
-                    style: TextStyle(
-                      fontSize: 12, // Adjust the font size as needed
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Image.asset(
+                      iconAssetPaths[index],
+                      width: 45,
+                      height: 45,
+
                     ),
-                  ),
-                ],
+                    SizedBox(height: 4),
+                    Text(
+                      iconNames[index],
+                      style: TextStyle(
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           );
         },
       ),
     );
+  }
+
+  void launchWebsite(int index) {
+    String url;
+    switch (iconNames[index]) {
+      case 'Hotel':
+        url = 'https://www.trivago.in/';
+        break;
+      case 'Food':
+        url = 'https://www.swiggy.com/';
+        break;
+      case 'Music':
+        url = 'https://www.spotify.com/';
+        break;
+      default:
+        return;
+    }
+    launch(url);
   }
 }

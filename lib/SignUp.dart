@@ -202,9 +202,12 @@
 //     );
 //   }
 // }
-
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:sihapp/GoogleSignUp.dart';
+import 'package:sihapp/Password_Screen.dart';
+import 'package:sihapp/SetPin.dart';
+import 'package:sihapp/bg.dart';
 
 class SignUpScreen extends StatefulWidget {
   @override
@@ -216,11 +219,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  bool _isSigningUp = false; // Track sign-up state
+  bool _isSigningUp = false;
+  bool _isPasswordVisible = false;
 
   Future<void> _signUp() async {
     setState(() {
-      _isSigningUp = true; // Start the sign-up process
+      _isSigningUp = true;
     });
 
     try {
@@ -229,19 +233,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
       if (email.isEmpty || password.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Please enter a valid email and password.')),
+          SnackBar(
+            content: Text('Please enter a valid email and password.'),
+          ),
         );
         return;
       }
 
-      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+      UserCredential userCredential =
+      await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
 
       if (userCredential.user != null) {
         final User? user = userCredential.user;
-        // Send email verification if the user is not null
+
         await user?.sendEmailVerification();
 
         ScaffoldMessenger.of(context).showSnackBar(
@@ -251,64 +258,166 @@ class _SignUpScreenState extends State<SignUpScreen> {
             ),
           ),
         );
+
+        // Navigate to the Set PIN screen
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => SetPinScreen()),
+        );
       }
     } catch (e) {
-      // Handle registration errors (e.g., email already in use)
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error: $e')),
       );
     } finally {
       setState(() {
-        _isSigningUp = false; // End the sign-up process
+        _isSigningUp = false;
       });
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Sign Up'),
-      ),
-      body: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              TextFormField(
-                controller: _emailController,
-                keyboardType: TextInputType.emailAddress,
-                decoration: InputDecoration(labelText: 'Email'),
-                validator: (String? value) {
-                  if (value == null || value.isEmpty || !value.contains('@')) {
-                    return 'Please enter a valid email address';
-                  }
-                  return null;
-                },
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            const BG(),
+            Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Registration",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 25,
+                      ),
+                    ),
+                    SizedBox(height: 16.0),
+                    TextFormField(
+                      controller: _emailController,
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: InputDecoration(
+                        labelText: 'Email',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(35.0),
+                        ),
+                      ),
+                      validator: (String? value) {
+                        if (value == null ||
+                            value.isEmpty ||
+                            !value.contains('@')) {
+                          return 'Please enter a valid email address';
+                        }
+                        return null;
+                      },
+                    ),
+                    SizedBox(height: 16.0),
+                    TextFormField(
+                      controller: _passwordController,
+                      obscureText: !_isPasswordVisible,
+                      decoration: InputDecoration(
+                        labelText: 'Password',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(35.0),
+                        ),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _isPasswordVisible
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _isPasswordVisible = !_isPasswordVisible;
+                            });
+                          },
+                        ),
+                      ),
+                      validator: (String? value) {
+                        if (value == null ||
+                            value.isEmpty ||
+                            value.length < 6) {
+                          return 'Password must be at least 6 characters long';
+                        }
+                        return null;
+                      },
+                    ),
+                    SizedBox(height: 16.0),
+                    ElevatedButton(
+                      onPressed: _isSigningUp ? null : _signUp,
+                      child:
+                      _isSigningUp ? CircularProgressIndicator() : Text('Sign Up'),
+                    ),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => LoginPage(),
+                            ),
+                          );
+                        },
+                        child: Text(
+                          "Already Have Account",
+                          style: TextStyle(
+                            color: Colors.blue,
+                            fontSize: 16,
+                            decoration: TextDecoration.underline,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.center,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Sign Up Using",
+                            style: TextStyle(
+                              color: Colors.black,
+                            ),
+                          ),
+                          SizedBox(height: 8.0),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => SignInScreen_G(),
+                                ),
+                              );
+                            },
+                            child: Image.asset(
+                              'assets/google.png',
+                              width: 50.0,
+                              height: 50.0,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              TextFormField(
-                controller: _passwordController,
-                obscureText: true,
-                decoration: InputDecoration(labelText: 'Password'),
-                validator: (String? value) {
-                  if (value == null || value.isEmpty || value.length < 6) {
-                    return 'Password must be at least 6 characters long';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 16.0),
-              ElevatedButton(
-                onPressed: _isSigningUp ? null : _signUp,
-                child: _isSigningUp
-                    ? CircularProgressIndicator() // Show loading indicator while signing up
-                    : Text('Sign Up'),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
 }
+
+void main() {
+  runApp(MaterialApp(
+    home: SignUpScreen(),
+  ));
+}
+

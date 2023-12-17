@@ -1,5 +1,6 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
-
+import 'package:http/http.dart' as http;
 void main() {
   runApp(MaterialApp(
     home: ChatbotScreen(),
@@ -28,14 +29,55 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
     setState(() {
       _currentConversation.add(userMessage);
     });
+    _callMainAPI(text);
 
     _simulateChatbotResponse(text);
+  }
+  // Function to call the main API
+  // Function to call the main API with a GET request
+  void _callMainAPI(String userInput) async {
+    // URL of the main API (assuming it's a GET request)
+    String mainApiUrl = 'http://127.0.0.1:5000/?message=$userInput';
+
+    try {
+      // Make a GET request to the main API
+      final http.Response response = await http.get(
+        Uri.parse(mainApiUrl),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        // If the main API call is successful, you can process the response
+        Map<String, dynamic> mainApiResponse = jsonDecode(response.body);
+
+        // Handle the response (customize based on your API)
+        String botResponse = mainApiResponse['response'];
+
+        // Create a chatbot response
+        ChatMessage botMessage = ChatMessage(
+          text: botResponse,
+          isUserMessage: false,
+        );
+
+        setState(() {
+          _currentConversation.add(botMessage);
+        });
+      } else {
+        // Handle errors from the main API
+        print('Error calling Main API: ${response.statusCode}');
+      }
+    } catch (e) {
+      // Handle exceptions
+      print('Exception calling Main API: $e');
+    }
   }
 
   void _simulateChatbotResponse(String userMessage) {
     // Simulate chatbot response after a brief delay (you can replace this with actual chatbot logic)
     Future.delayed(const Duration(seconds: 1), () {
-      String response = 'Hello, I am Eva. How can I assist you?';
+      String response = 'Hello, I am Eva. How can I assist you ?';
 
       // Create a chatbot response
       ChatMessage botMessage = ChatMessage(
